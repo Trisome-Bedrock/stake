@@ -10,7 +10,7 @@ def main():
     ProxyAdmin = deps.ProxyAdmin
     TransparentUpgradeableProxy = deps.TransparentUpgradeableProxy
 
-    staking = Staking("0x4beFa2aA9c305238AA3E0b5D17eB20C045269E9d")
+    staking = Staking.at("0x4beFa2aA9c305238AA3E0b5D17eB20C045269E9d")
     delayed_withdrawal_router = interface.IDelayedWithdrawalRouter("0x7Fe7E9CC0F274d2435AD5d56D5fa73E47F6A23D8")
 
     # Upgrade Restaking
