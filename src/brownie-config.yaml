@@ -32,3 +32,8 @@ networks:
   mainnet-fork:
     cmd_settings:
       #    evm_version: "shanghai"
+  mainnet-public-fork:
+    cmd_settings:
+      default_balance: "1000000000000 ether"
+      unlock:
+        - 0xAeE017052DF6Ac002647229D58B786E380B9721A  # ProxyAdmin owner address
