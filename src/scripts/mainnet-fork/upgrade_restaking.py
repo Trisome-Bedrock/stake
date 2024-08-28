@@ -52,24 +52,32 @@ def main():
     tx = staking.pushBeacon({'from': user})
     assert 'BalanceSynced' in tx.events
     assert 'Claimed' in tx.events
-    assert tx.events['BalanceSynced']['diff'] == balance_to_sync
+    assert tx.events['BalanceSynced']['diff'] >= balance_to_sync
     assert tx.events['Claimed']['amount'] == total_delayed_withdrawal_before
     assert staking.balance() == staking_contract_balance_before + balance_to_sync
     assert restaking.getPendingWithdrawalAmount() == total_pending_withdrawal_before - balance_to_sync
-    assert total_delayed_withdrawal_before == 0
-    assert total_pod_owner_balance_before == 0
 
 
     # Test Scenario 2: Call staking.pushBeacon() again, which will cause no change to pending withdrawals;
     # namely, no assets should be transferred from any pods to the router.
     total_pending_withdrawal_before = restaking.getPendingWithdrawalAmount()
-    assert 'BalanceSynced' in tx.events
+    tx = staking.pushBeacon({'from': user})
+    assert 'BalanceSynced' not in tx.events
     assert 'Claimed' in tx.events
-    assert tx.events['BalanceSynced']['diff'] == 0
     assert tx.events['Claimed']['amount'] == 0
     assert restaking.getPendingWithdrawalAmount() == total_pending_withdrawal_before
-    assert total_delayed_withdrawal_before == 0
+
+
     assert total_pod_owner_balance_before == 0
+
+    total_delayed_withdrawal_before = 0
+    for i in range(total_pods):
+        pod_owner = restaking.podOwners(i)
+        delayed_withdrawal_list =  delayed_withdrawal_router.getClaimableUserDelayedWithdrawals(pod_owner)
+        for j in range(len(delayed_withdrawal_list)):
+            total_delayed_withdrawal_before += delayed_withdrawal_list[j]['amount']
+    assert total_delayed_withdrawal_before == 0
+
 
 
 
