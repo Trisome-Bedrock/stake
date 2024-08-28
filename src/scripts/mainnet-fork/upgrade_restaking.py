@@ -1,4 +1,4 @@
-from brownie import Restaking, Staking, accounts, Contract, project, config
+from brownie import Restaking, Staking, interface, accounts, Contract, project, config
 from pathlib import Path
 
 # Execution Command Format:
