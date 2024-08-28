@@ -37,7 +37,8 @@ def main():
     total_pods = restaking.getTotalPods()
     for i in range(total_pods):
         pod = restaking.getPod(i)
-        total_pod_balance_before += pod.balance()
+        pod_address_obj = accounts.at(pod, True)
+        total_pod_balance_before += pod_address_obj.balance()
         pod_owner = restaking.podOwners(i)
         total_pod_owner_balance_before += restaking.balance()
         delayed_withdrawal_list =  delayed_withdrawal_router.getClaimableUserDelayedWithdrawals(pod_owner)
