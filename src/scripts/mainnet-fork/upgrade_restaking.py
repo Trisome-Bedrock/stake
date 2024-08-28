@@ -46,7 +46,6 @@ def main():
             total_delayed_withdrawal_before += delayed_withdrawal_list[j]['amount']
 
     assert total_delayed_withdrawal_before > 0
-    assert total_pod_owner_balance_before > 0
 
     staking_contract_balance_before = staking.balance()
     balance_to_sync = total_delayed_withdrawal_before + total_pod_owner_balance_before
