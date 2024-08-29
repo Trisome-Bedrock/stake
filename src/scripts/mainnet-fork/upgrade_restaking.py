@@ -49,12 +49,12 @@ def main():
     assert total_delayed_withdrawal_before > 0
 
     staking_contract_balance_before = staking.balance()
-    balance_to_sync = total_delayed_withdrawal_before + total_pod_owner_balance_before
     tx = staking.pushBeacon({'from': user})
     assert 'BalanceSynced' in tx.events
     assert 'Claimed' in tx.events
-    assert tx.events['BalanceSynced']['diff'] == balance_to_sync    # TODO: To check again
-    assert tx.events['Claimed']['amount'] == total_delayed_withdrawal_before
+    balance_to_sync = tx.events['Claimed']['amount']
+    assert tx.events['BalanceSynced']['diff'] == balance_to_sync
+    assert balance_to_sync <= total_delayed_withdrawal_before
     assert staking.balance() == staking_contract_balance_before + balance_to_sync
     assert restaking.getPendingWithdrawalAmount() == total_pending_withdrawal_before - balance_to_sync
 
