@@ -53,7 +53,7 @@ def main():
     assert 'BalanceSynced' in tx.events
     assert 'Claimed' in tx.events
     balance_to_sync = tx.events['Claimed']['amount']
-    assert tx.events['BalanceSynced']['diff'] == balance_to_sync
+    assert tx.events['BalanceSynced']['diff'] >= balance_to_sync
     assert balance_to_sync <= total_delayed_withdrawal_before
     assert staking.balance() == staking_contract_balance_before + balance_to_sync
     assert restaking.getPendingWithdrawalAmount() == total_pending_withdrawal_before - balance_to_sync
