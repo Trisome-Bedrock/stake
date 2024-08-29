@@ -40,7 +40,8 @@ def main():
         pod_address_obj = accounts.at(pod, True)
         total_pod_balance_before += pod_address_obj.balance()
         pod_owner = restaking.podOwners(i)
-        total_pod_owner_balance_before += restaking.balance()
+        pod_owner_obj = accounts.at(pod_owner, True)
+        total_pod_owner_balance_before += pod_owner_obj.balance()
         delayed_withdrawal_list =  delayed_withdrawal_router.getClaimableUserDelayedWithdrawals(pod_owner)
         for j in range(len(delayed_withdrawal_list)):
             total_delayed_withdrawal_before += delayed_withdrawal_list[j]['amount']
@@ -52,7 +53,7 @@ def main():
     tx = staking.pushBeacon({'from': user})
     assert 'BalanceSynced' in tx.events
     assert 'Claimed' in tx.events
-    assert tx.events['BalanceSynced']['diff'] >= balance_to_sync    # TODO: To check again
+    assert tx.events['BalanceSynced']['diff'] == balance_to_sync    # TODO: To check again
     assert tx.events['Claimed']['amount'] == total_delayed_withdrawal_before
     assert staking.balance() == staking_contract_balance_before + balance_to_sync
     assert restaking.getPendingWithdrawalAmount() == total_pending_withdrawal_before - balance_to_sync
