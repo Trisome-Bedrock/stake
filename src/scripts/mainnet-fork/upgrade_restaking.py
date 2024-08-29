@@ -65,18 +65,29 @@ def main():
     assert 'BalanceSynced' not in tx.events
     assert 'Claimed' in tx.events
     assert tx.events['Claimed']['amount'] == 0
-    assert restaking.getPendingWithdrawalAmount() == total_pending_withdrawal_before
 
-
-    assert total_pod_owner_balance_before == 0
-
-    total_delayed_withdrawal_before = 0
+    total_pod_balance_after = 0
+    total_delayed_withdrawal_after = 0
+    total_pod_owner_balance_after = 0
+    total_pending_withdrawal_after = restaking.getPendingWithdrawalAmount()
+    total_pods = restaking.getTotalPods()
     for i in range(total_pods):
+        pod = restaking.getPod(i)
+        pod_address_obj = accounts.at(pod, True)
+        total_pod_balance_after += pod_address_obj.balance()
         pod_owner = restaking.podOwners(i)
+        total_pod_owner_balance_after += restaking.balance()
         delayed_withdrawal_list =  delayed_withdrawal_router.getClaimableUserDelayedWithdrawals(pod_owner)
         for j in range(len(delayed_withdrawal_list)):
-            total_delayed_withdrawal_before += delayed_withdrawal_list[j]['amount']
-    assert total_delayed_withdrawal_before == 0
+            total_delayed_withdrawal_after += delayed_withdrawal_list[j]['amount']
+
+    assert total_pod_balance_after == total_pod_balance_before
+    assert total_pod_balance_after == total_pending_withdrawal_after
+    assert total_pending_withdrawal_after == total_pending_withdrawal_before
+    assert total_delayed_withdrawal_after == 0
+    assert total_pod_owner_balance_after == 0
+
+
 
 
 
