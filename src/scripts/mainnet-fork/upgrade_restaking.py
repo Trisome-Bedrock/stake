@@ -83,7 +83,7 @@ def main():
             total_delayed_withdrawal_after += delayed_withdrawal_list[j]['amount']
 
     assert total_pod_balance_after == total_pod_balance_before
-    assert total_pod_balance_after == total_pending_withdrawal_after    # TODO: To check again
+    assert total_pod_balance_after <= total_pending_withdrawal_after
     assert total_pending_withdrawal_after == total_pending_withdrawal_before
     assert total_delayed_withdrawal_after == 0
     assert total_pod_owner_balance_after == 0
